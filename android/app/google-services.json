@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "831754256323",
+    "project_id": "nightbite-37fa9",
+    "storage_bucket": "nightbite-37fa9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831754256323:android:009ecff7db30875311c776",
+        "android_client_info": {
+          "package_name": "com.codeforany.food_delivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831754256323-jel0djss7e9rndg3keabd3d6r1lrl1og.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCacRYuUKMjxNqytKMp5rF7nhwZzH2qmYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831754256323-jel0djss7e9rndg3keabd3d6r1lrl1og.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "831754256323-eqluhvjeoqn6gs1erv9ecgi7c7mktecp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nightBite"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831754256323:android:0d75e102f05a8f9a11c776",
+        "android_client_info": {
+          "package_name": "com.example.night_bite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831754256323-qng079ovm0jfckc412mu0oc2i71428th.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.night_bite",
+            "certificate_hash": "3e84ee4dbdc06d63fbdffe8f9c854f67d654b14b"
+          }
+        },
+        {
+          "client_id": "831754256323-jel0djss7e9rndg3keabd3d6r1lrl1og.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCacRYuUKMjxNqytKMp5rF7nhwZzH2qmYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831754256323-jel0djss7e9rndg3keabd3d6r1lrl1og.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "831754256323-eqluhvjeoqn6gs1erv9ecgi7c7mktecp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nightBite"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

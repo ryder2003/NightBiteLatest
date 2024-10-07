@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:food_delivery/common/color_extension.dart';
 import 'package:food_delivery/common/locator.dart';
@@ -12,19 +14,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'common/globs.dart';
 import 'common/my_http_overrides.dart';
+import 'firebase_options.dart';
 
 SharedPreferences? prefs;
 void main() async {
   setUpLocator();
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
-  prefs = await SharedPreferences.getInstance();
+ // prefs = await SharedPreferences.getInstance();
 
-  if(Globs.udValueBool(Globs.userLogin)) {
-    ServiceCall.userPayload = Globs.udValue(Globs.userPayload);
-  }
+  // if(Globs.udValueBool(Globs.userLogin)) {
+  //   ServiceCall.userPayload = Globs.udValue(Globs.userPayload);
+  // }
 
-  runApp( const MyApp(defaultHome:  StartupView(),));
+  //For setting orientation to portrait mode only
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitDown,DeviceOrientation.portraitUp]).then((value){
+    _initializeFirebase();
+    runApp(const MyApp(defaultHome: MainTabView(),));
+  });
 }
 
 void configLoading() {
@@ -98,4 +106,11 @@ class _MyAppState extends State<MyApp> {
       },
     );
   }
+}
+
+
+_initializeFirebase() async{
+  return await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
