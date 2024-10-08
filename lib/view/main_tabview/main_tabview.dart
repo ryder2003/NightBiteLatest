@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/common/color_extension.dart';
 import 'package:food_delivery/common_widget/tab_button.dart';
 
+import '../../api/APIs.dart';
 import '../home/home_view.dart';
 import '../menu/menu_view.dart';
 import '../more/more_view.dart';
@@ -19,6 +20,21 @@ class _MainTabViewState extends State<MainTabView> {
   int selctTab = 2;
   PageStorageBucket storageBucket = PageStorageBucket();
   Widget selectPageView = const HomeView();
+  bool _isInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the user info and setup the screens
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    await APIs.getSelfInfo();
+    setState(() {
+      _isInitialized = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +42,7 @@ class _MainTabViewState extends State<MainTabView> {
       body: PageStorage(bucket: storageBucket, child: selectPageView),
       backgroundColor: const Color(0xfff5f5f5),
       floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
+      FloatingActionButtonLocation.miniCenterDocked,
       floatingActionButton: SizedBox(
         width: 60,
         height: 60,
@@ -86,10 +102,7 @@ class _MainTabViewState extends State<MainTabView> {
                     }
                   },
                   isSelected: selctTab == 1),
-        
-        
-                const  SizedBox(width: 40, height: 40, ),
-        
+              const SizedBox(width: 40, height: 40),
               TabButton(
                   title: "Profile",
                   icon: "assets/img/tab_profile.png",
@@ -109,7 +122,7 @@ class _MainTabViewState extends State<MainTabView> {
                   onTap: () {
                     if (selctTab != 4) {
                       selctTab = 4;
-                      selectPageView = const  MoreView();
+                      selectPageView = const MoreView();
                     }
                     if (mounted) {
                       setState(() {});

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/common/color_extension.dart';
 import 'package:food_delivery/common_widget/round_button.dart';
-import 'package:food_delivery/view/main_tabview/main_tabview.dart';
-
+import 'package:food_delivery/view/login/login_view.dart';
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({super.key});
 
@@ -36,7 +35,6 @@ class _OnBoardingViewState extends State<OnBoardingView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     controller.addListener(() {
@@ -138,7 +136,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const MainTabView(),
+                            builder: (context) => const Login(),
                           ),
                         );
                       } else {
@@ -146,10 +144,13 @@ class _OnBoardingViewState extends State<OnBoardingView> {
 
                         setState(() {
                           selectPage = selectPage + 1;
-                          controller.animateToPage(selectPage,
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.bounceInOut);
+                          controller.animateToPage(
+                            selectPage,
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeInOut, // Smooth transition curve
+                          );
                         });
+
                       }
                     }),
               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/view/login/SignUp.dart';
 import 'package:food_delivery/view/login/login_view.dart';
-import 'package:food_delivery/view/login/sing_up_view.dart';
 
 import '../../common/color_extension.dart';
 import '../../common_widget/round_button.dart';
@@ -58,7 +58,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const LoginView(),
+                      builder: (context) => const Login(),
                     ),
                   );
                 },
@@ -76,7 +76,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                    Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const SignUpView(),
+                      builder: (context) => const Signup(),
                     ),
                   );
                 },
