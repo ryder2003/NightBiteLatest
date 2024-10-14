@@ -8,14 +8,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../../main.dart';
 
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class AdminLogin extends StatefulWidget {
+  const AdminLogin({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<AdminLogin> createState() => _AdminLoginState();
 }
 
-class _LoginState extends State<Login> {
+class _AdminLoginState extends State<AdminLogin> {
 
 
   TextEditingController usernameController= new TextEditingController();
