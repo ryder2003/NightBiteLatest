@@ -163,12 +163,6 @@ class _LoginState extends State<Login> {
               const SizedBox(height: 30),
               Stack(
                 children: [
-                  Positioned(
-                    top: 0,
-                      right: 10,
-                      child: GestureDetector(
-                          onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => AdminLogin()));},
-                          child: Text("Admin Login", style: TextStyle(color: Colors.black, fontSize: 24),)), ),
                   // Image at the center
                   Center(
                     child: Image.asset(
@@ -324,7 +318,17 @@ class _LoginState extends State<Login> {
                         ),
                       ),
 
-                      SizedBox(height: 30,)
+                      SizedBox(height: 30,),
+
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminLogin()));
+                        },
+                        child: const Center(
+                          child: Text("Skip to Homepage", style: TextStyle(color: Colors.grey, decoration: TextDecoration.underline, fontSize: 20),),
+                        ),
+                      ),
+                      SizedBox(height: 60),
 
                     ],
                   ),
