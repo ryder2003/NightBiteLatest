@@ -325,7 +325,7 @@ class _LoginState extends State<Login> {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminLogin()));
                         },
                         child: const Center(
-                          child: Text("Skip to Homepage", style: TextStyle(color: Colors.grey, decoration: TextDecoration.underline, fontSize: 20),),
+                          child: Text("Admin Login", style: TextStyle(color: Colors.black, decoration: TextDecoration.underline, fontSize: 20),),
                         ),
                       ),
                       SizedBox(height: 60),
