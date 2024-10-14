@@ -145,12 +145,12 @@ class _AdminLoginState extends State<AdminLogin> {
   loginAdmin(){
     FirebaseFirestore.instance.collection("Admin").get().then((snapshot){
       snapshot.docs.forEach((result){
-        if(result.data()['Username'] != usernameController.text.trim()){
+        if(result.data()['username'] != usernameController.text.trim()){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: Colors.greenAccent,
               content: Text("Username is not correct",
                   style: TextStyle(color: Colors.black, fontSize: 16))));
-        }else if(result.data()['Password'] != passwordController.text.trim()){
+        }else if(result.data()['password'] != passwordController.text.trim()){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: Colors.greenAccent,
               content: Text("Password is not correct",
