@@ -1,10 +1,8 @@
-import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/view/Admin/add_Products.dart';
 import 'package:food_delivery/view/login/forgotPassword.dart';
-import 'package:food_delivery/view/main_tabview/main_tabview.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../../main.dart';
 
 
@@ -36,7 +34,7 @@ class _AdminLoginState extends State<AdminLogin> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              Image.asset('image/logoblack.png'),
+              Image.asset('assets/img/logoblack.png'),
               //const SizedBox(height: 10,),
 
 
@@ -157,7 +155,7 @@ class _AdminLoginState extends State<AdminLogin> {
                   style: TextStyle(color: Colors.black, fontSize: 16))));
         }
         else {
-          Navigator.push(context,MaterialPageRoute(builder: (context) => MainTabView()));
+          Navigator.push(context,MaterialPageRoute(builder: (context) => AddProducts()));
         }
       });
     });

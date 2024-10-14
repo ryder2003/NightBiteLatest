@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:food_delivery/view/Admin_login/admin_login.dart';
 import 'package:food_delivery/view/login/forgotPassword.dart';
 import 'package:food_delivery/view/main_tabview/main_tabview.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,6 +10,7 @@ import '../../api/APIs.dart';
 import '../../common_widget/service_widget.dart';
 import '../../helper/dialogs.dart';
 import '../../main.dart';
+import '../Admin/admin_login.dart';
 import 'SignUp.dart';
 
 
@@ -171,23 +171,23 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   // Positioned Admin Login at the top-right corner
-                  Positioned(
-                    top: 10, // Adjust the position from the top
-                    right: 10, // Adjust the position from the right
-                    child: GestureDetector(
-                      onTap: () {
-                        // Handle admin login tap event here
-                      },
-                      child: const Text(
-                        'Admin Login',
-                        style: TextStyle(
-                          color: Colors.blueAccent, // Color of the text
-                          fontSize: 16.0, // Font size
-                          fontWeight: FontWeight.bold, // Font weight
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Positioned(
+                  //   top: 10, // Adjust the position from the top
+                  //   right: 10, // Adjust the position from the right
+                  //   child: GestureDetector(
+                  //     onTap: () {
+                  //       // Handle admin login tap event here
+                  //     },
+                  //     child: const Text(
+                  //       'Admin Login',
+                  //       style: TextStyle(
+                  //         color: Colors.blueAccent, // Color of the text
+                  //         fontSize: 16.0, // Font size
+                  //         fontWeight: FontWeight.bold, // Font weight
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
 
