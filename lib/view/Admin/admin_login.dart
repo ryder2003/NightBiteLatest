@@ -1,21 +1,19 @@
-import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/view/Admin/add_Products.dart';
 import 'package:food_delivery/view/login/forgotPassword.dart';
-import 'package:food_delivery/view/main_tabview/main_tabview.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../../main.dart';
 
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class AdminLogin extends StatefulWidget {
+  const AdminLogin({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<AdminLogin> createState() => _AdminLoginState();
 }
 
-class _LoginState extends State<Login> {
+class _AdminLoginState extends State<AdminLogin> {
 
 
   TextEditingController usernameController= new TextEditingController();
@@ -36,7 +34,7 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              Image.asset('image/logoblack.png'),
+              Image.asset('assets/img/logoblack.png'),
               //const SizedBox(height: 10,),
 
 
@@ -145,19 +143,19 @@ class _LoginState extends State<Login> {
   loginAdmin(){
     FirebaseFirestore.instance.collection("Admin").get().then((snapshot){
       snapshot.docs.forEach((result){
-        if(result.data()['Username'] != usernameController.text.trim()){
+        if(result.data()['username'] != usernameController.text.trim()){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: Colors.greenAccent,
               content: Text("Username is not correct",
                   style: TextStyle(color: Colors.black, fontSize: 16))));
-        }else if(result.data()['Password'] != passwordController.text.trim()){
+        }else if(result.data()['password'] != passwordController.text.trim()){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: Colors.greenAccent,
               content: Text("Password is not correct",
                   style: TextStyle(color: Colors.black, fontSize: 16))));
         }
         else {
-          Navigator.push(context,MaterialPageRoute(builder: (context) => MainTabView()));
+          Navigator.push(context,MaterialPageRoute(builder: (context) => AddProducts()));
         }
       });
     });

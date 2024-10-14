@@ -9,4 +9,11 @@ class DatabaseMethods {
         .doc(id)
         .set(userInfoMap);
   }
+
+  Future addProducts(Map<String, dynamic> userInfoMap, String categoryname)async{
+    return await FirebaseFirestore.instance
+        .collection(categoryname)
+        .add(userInfoMap);
+  }
+
 }

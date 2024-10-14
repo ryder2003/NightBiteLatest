@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:food_delivery/common/color_extension.dart';
 import 'package:food_delivery/common/locator.dart';
 import 'package:food_delivery/common/service_call.dart';
+import 'package:food_delivery/view/Admin/add_Products.dart';
 import 'package:food_delivery/view/login/login_view.dart';
 import 'package:food_delivery/view/login/welcome_view.dart';
 import 'package:food_delivery/view/main_tabview/main_tabview.dart';
@@ -35,7 +36,7 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitDown,DeviceOrientation.portraitUp]).then((value){
     _initializeFirebase();
-    runApp(const MyApp(defaultHome: OnBoardingView(),));
+    runApp(const MyApp(defaultHome: AddProducts(),));
   });
 }
 
