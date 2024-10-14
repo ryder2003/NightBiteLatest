@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:random_string/random_string.dart';
 
@@ -22,6 +23,7 @@ class _AddProductsState extends State<AddProducts> {
   TextEditingController nameController = new TextEditingController();
   TextEditingController priceController = new TextEditingController();
   TextEditingController detailController = new TextEditingController();
+  bool isLoading = false;
 
   Future getImage() async {
     var image = await _picker.pickImage(source: ImageSource.gallery);
@@ -31,36 +33,68 @@ class _AddProductsState extends State<AddProducts> {
     });
   }
 
-  uploadItem() async{
-    if(selectedImage!=null && nameController.text!= ""){
-      String addId = randomAlphaNumeric(10);
-      Reference firebaseStorageRef = FirebaseStorage.instance.ref().child("blogImage").child(addId);
-
-      final UploadTask task = firebaseStorageRef.putFile(selectedImage!);
-      var downloadUrl = await (await task).ref.getDownloadURL();
-
-      Map<String, dynamic> addProduct = {
-        "Name": nameController.text,
-        "Image": downloadUrl,
-        "Price": priceController.text,
-        "Detail": detailController.text
-      };
-
-      await DatabaseMethods().addProducts(addProduct, value!).then((value){
-        selectedImage = null;
-        nameController.text = "";
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: Colors.greenAccent,
-            content: Text("Product is added successfully",
-                style: TextStyle(color: Colors.black, fontSize: 16))));
-
+  uploadItem() async {
+    if (selectedImage != null && nameController.text.isNotEmpty) {
+      setState(() {
+        isLoading = true; // Start loading
       });
 
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.greenAccent,
-          content: Text("Kuch toh gadbad hai",
-              style: TextStyle(color: Colors.black, fontSize: 16))));
+      try {
+        String addId = randomAlphaNumeric(10);
+        Reference firebaseStorageRef = FirebaseStorage.instance.ref().child("blogImage").child(addId);
+
+        final UploadTask task = firebaseStorageRef.putFile(selectedImage!);
+        var downloadUrl = await (await task).ref.getDownloadURL();
+
+        Map<String, dynamic> addProduct = {
+          "Name": nameController.text,
+          "Image": downloadUrl,
+          "Price": priceController.text,
+          "Detail": detailController.text
+        };
+
+        await DatabaseMethods().addProducts(addProduct, value!).then((value) {
+          setState(() {
+            selectedImage = null;
+            nameController.clear();
+            priceController.clear();
+            detailController.clear();
+            value = null;
+            isLoading = false; // Stop loading
+          });
+
+          Fluttertoast.showToast(
+              msg: "Product is added successfully",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+        });
+      } catch (e) {
+        setState(() {
+          isLoading = false; // Stop loading in case of an error
+        });
+
+        Fluttertoast.showToast(
+            msg: "An error occured in adding.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: "Please fill in all the fields.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
     }
   }
 
