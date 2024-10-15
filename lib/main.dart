@@ -36,7 +36,7 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitDown,DeviceOrientation.portraitUp]).then((value){
     _initializeFirebase();
-    runApp(const MyApp(defaultHome: MainTabView(),));
+    runApp(const MyApp(defaultHome: Login(),));
   });
 }
 

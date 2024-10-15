@@ -7,7 +7,6 @@ import 'package:food_delivery/view/main_tabview/main_tabview.dart';
 import '../../common/color_extension.dart';
 import '../../common_widget/menu_item_row.dart';
 import '../../common_widget/round_textfield.dart';
-import '../../common_widget/service_widget.dart';
 import '../../services/database.dart';
 import '../more/my_order_view.dart';
 import 'item_details_view.dart';
@@ -96,7 +95,7 @@ class _CategoryProductState extends State<CategoryProduct> {
       "name": "Dark Chocolate Cake",
       "rate": "4.9",
       "rating": "124",
-      "type": "Cakes by Tella",
+      "type": "Cakes by Raman",
       "food_type": "Desserts"
     },
     {

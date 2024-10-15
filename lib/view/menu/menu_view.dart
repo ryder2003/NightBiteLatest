@@ -67,7 +67,7 @@ class _MenuViewState extends State<MenuView> {
               color: TColor.primary,
               borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(35),
-                  bottomRight: Radius.circular(35)),
+                  bottomRight: Radius.circular(34)),
             ),
           ),
           SingleChildScrollView(

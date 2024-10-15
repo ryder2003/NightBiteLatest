@@ -200,7 +200,7 @@ class MenuItemRow extends StatelessWidget {
                             " . ",
                             textAlign: TextAlign.center,
                             style:
-                            TextStyle(color: TColor.primary, fontSize: 11),
+                            TextStyle(color: TColor.primary, fontSize: 12),
                           ),
                           Text(
                             foodType,
