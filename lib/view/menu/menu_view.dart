@@ -15,12 +15,27 @@ class MenuView extends StatefulWidget {
 class _MenuViewState extends State<MenuView> {
   List menuArr = [
     {
-      "name": "Food",
+      "name": "Rolls",
       "image": "assets/img/menu_1.png",
       "items_count": "120",
     },
     {
-      "name": "Beverages",
+      "name": "Rice",
+      "image": "assets/img/menu_1.png",
+      "items_count": "120",
+    },
+    {
+      "name": "Pasta",
+      "image": "assets/img/menu_1.png",
+      "items_count": "120",
+    },
+    {
+      "name": "Maggie",
+      "image": "assets/img/menu_1.png",
+      "items_count": "120",
+    },
+    {
+      "name": "Drinks",
       "image": "assets/img/menu_2.png",
       "items_count": "220",
     },
@@ -30,7 +45,7 @@ class _MenuViewState extends State<MenuView> {
       "items_count": "155",
     },
     {
-      "name": "Promotions",
+      "name": "Snacks",
       "image": "assets/img/menu_4.png",
       "items_count": "25",
     },
@@ -52,7 +67,7 @@ class _MenuViewState extends State<MenuView> {
               color: TColor.primary,
               borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(35),
-                  bottomRight: Radius.circular(35)),
+                  bottomRight: Radius.circular(34)),
             ),
           ),
           SingleChildScrollView(
@@ -126,7 +141,7 @@ class _MenuViewState extends State<MenuView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MenuItemsView(
+                                builder: (context) => CategoryProduct(
                                   mObj: mObj,
                                 ),
                               ),

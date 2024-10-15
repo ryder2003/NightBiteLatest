@@ -99,7 +99,7 @@ class _AddProductsState extends State<AddProducts> {
   }
 
   String? value;
-  final List<String> categoryitem = ['Rolls','Rice','Pasta','Maggie','Snacks','Drinks'];
+  final List<String> categoryitem = ['Rolls','Rice','Pasta','Maggie','Snacks','Drinks','Desserts'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
