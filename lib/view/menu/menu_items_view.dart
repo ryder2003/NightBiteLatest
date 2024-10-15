@@ -1,20 +1,85 @@
-import 'package:flutter/material.dart';
-import 'package:food_delivery/common/color_extension.dart';
-import 'package:food_delivery/common_widget/round_textfield.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:food_delivery/view/main_tabview/main_tabview.dart';
+
+import '../../common/color_extension.dart';
 import '../../common_widget/menu_item_row.dart';
+import '../../common_widget/round_textfield.dart';
+import '../../common_widget/service_widget.dart';
+import '../../services/database.dart';
 import '../more/my_order_view.dart';
 import 'item_details_view.dart';
 
-class MenuItemsView extends StatefulWidget {
-  final Map mObj;
-  const MenuItemsView({super.key, required this.mObj});
+class CategoryProduct extends StatefulWidget {
+  Map mObj;
+  CategoryProduct({required this.mObj});
+
 
   @override
-  State<MenuItemsView> createState() => _MenuItemsViewState();
+  State<CategoryProduct> createState() => _CategoryProductState();
 }
 
-class _MenuItemsViewState extends State<MenuItemsView> {
+class _CategoryProductState extends State<CategoryProduct> {
+
+  Stream? CategoryStream;
+
+  getOnTheLoad() async {
+    print("Fetching products for: ${widget.mObj['name']}");
+    CategoryStream = await DatabaseMethods().getProducts(widget.mObj['name'].toString());
+    print(CategoryStream != null ? "Stream fetched successfully" : "Stream is null");
+    setState(() {});
+  }
+
+
+  @override
+  void initState() {
+    getOnTheLoad();
+    super.initState();
+  }
+
+  Widget allProducts() {
+    return StreamBuilder(
+      stream: CategoryStream,
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data.docs.isEmpty) {
+          return const Center(child: Text("No products found."));
+        }
+        return ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          itemCount: snapshot.data.docs.length,
+          itemBuilder: ((context, index) {
+            DocumentSnapshot ds = snapshot.data.docs[index];
+            print(ds.data());
+
+            return MenuItemRow(
+              image: ds["Image"],
+              foodType: "",
+              name: ds["Name"],
+              rate: ds["Detail"],
+              type: widget.mObj['name'],
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ItemDetailsView(),
+                  ),
+                );
+              },
+            );
+          }),
+        );
+      },
+    );
+  }
+
+
   TextEditingController txtSearch = TextEditingController();
 
   List menuItemsArr = [
@@ -156,25 +221,7 @@ class _MenuItemsViewState extends State<MenuItemsView> {
               const SizedBox(
                 height: 15,
               ),
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                itemCount: menuItemsArr.length,
-                itemBuilder: ((context, index) {
-                  var mObj = menuItemsArr[index] as Map? ?? {};
-                  return MenuItemRow(
-                    mObj: mObj,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ItemDetailsView()),
-                      );
-                    },
-                  );
-                }),
-              ),
+
             ],
           ),
         ),
