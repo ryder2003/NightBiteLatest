@@ -6,16 +6,28 @@ import '../../common/color_extension.dart';
 import '../more/my_order_view.dart';
 
 class ItemDetailsView extends StatefulWidget {
-  const ItemDetailsView({super.key});
+  final String price;
+  final String name;
+  final String description;
+  final String image;
+  const ItemDetailsView({super.key, required this.price, required this.name, required this.description, required this.image });
 
   @override
   State<ItemDetailsView> createState() => _ItemDetailsViewState();
 }
 
 class _ItemDetailsViewState extends State<ItemDetailsView> {
-  double price = 15;
+  late int price;
   int qty = 1;
   bool isFav = false;
+  String? selectedSize;
+  String? ingredients;
+
+  @override
+  void initState() {
+    super.initState();
+    price = int.parse(widget.price);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +37,26 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
       body: Stack(
         alignment: Alignment.topCenter,
         children: [
-          Image.asset(
-            "assets/img/detail_top.png",
+          Image.network(
+            widget.image,
             width: media.width,
-            height: media.width,
+            height: media.height,
             fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return const Center(
+                child: Icon(
+                  Icons.broken_image,
+                  size: 50,
+                  color: Colors.grey,
+                ),
+              ); // Fallback widget in case the image fails to load
+            },
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return const Center(
+                child: CircularProgressIndicator(), // Show a loading indicator while the image loads
+              );
+            },
           ),
           Container(
             width: media.width,
@@ -68,7 +95,7 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 25),
                                 child: Text(
-                                  "Tandoori Chicken Pizza",
+                                  widget.name,
                                   style: TextStyle(
                                       color: TColor.primaryText,
                                       fontSize: 22,
@@ -128,7 +155,7 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                           CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "\$${price.toStringAsFixed(2)}",
+                                          "\$$price",
                                           style: TextStyle(
                                               color: TColor.primaryText,
                                               fontSize: 31,
@@ -170,7 +197,7 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 25),
                                 child: Text(
-                                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare leo non mollis id cursus. Eu euismod faucibus in leo malesuada",
+                                  widget.description,
                                   style: TextStyle(
                                       color: TColor.secondaryText,
                                       fontSize: 12),
@@ -214,26 +241,34 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                       color: TColor.textfield,
                                       borderRadius: BorderRadius.circular(5)),
                                   child: DropdownButtonHideUnderline(
-                                    child: DropdownButton(
+                                    child: DropdownButton<String>(
                                       isExpanded: true,
-                                      items: ["small", "Big"].map((e) {
-                                        return DropdownMenuItem(
+                                      value: selectedSize, // Display the selected value
+                                      items: ["Small", "Big"].map((e) {
+                                        return DropdownMenuItem<String>(
                                           value: e,
                                           child: Text(
                                             e,
-                                            style: TextStyle(
-                                                color: TColor.primaryText,
-                                                fontSize: 14),
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                            ),
                                           ),
                                         );
                                       }).toList(),
-                                      onChanged: (val) {},
-                                      hint: Text(
+                                      onChanged: (val) {
+                                        // Update the state when a new value is selected
+                                        setState(() {
+                                          selectedSize = val;
+                                        });
+                                      },
+                                      hint: const Text(
                                         "- Select the size of portion -",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                            color: TColor.secondaryText,
-                                            fontSize: 14),
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -252,26 +287,34 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                       color: TColor.textfield,
                                       borderRadius: BorderRadius.circular(5)),
                                   child: DropdownButtonHideUnderline(
-                                    child: DropdownButton(
+                                    child: DropdownButton<String>(
                                       isExpanded: true,
-                                      items: ["small", "Big"].map((e) {
-                                        return DropdownMenuItem(
+                                      value: ingredients, // Display the selected value
+                                      items: ["Sauce", "Napkins", "cheese dip"].map((e) {
+                                        return DropdownMenuItem<String>(
                                           value: e,
                                           child: Text(
                                             e,
-                                            style: TextStyle(
-                                                color: TColor.primaryText,
-                                                fontSize: 14),
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                            ),
                                           ),
                                         );
                                       }).toList(),
-                                      onChanged: (val) {},
-                                      hint: Text(
-                                        "- Select the ingredients -",
+                                      onChanged: (val) {
+                                        // Update the state when a new value is selected
+                                        setState(() {
+                                          ingredients = val;
+                                        });
+                                      },
+                                      hint: const Text(
+                                        "- Extra things to add -",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                            color: TColor.secondaryText,
-                                            fontSize: 14),
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -398,7 +441,7 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                                   left: 10,
                                                   right: 20),
                                               width: media.width - 80,
-                                              height: 120,
+                                              height: 190,
                                               decoration: const BoxDecoration(
                                                   color: Colors.white,
                                                   borderRadius:
@@ -440,7 +483,7 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                                     height: 15,
                                                   ),
                                                   Text(
-                                                    "\$${(price * qty).toString()}",
+                                                    "\$${(price * qty)}",
                                                     style: TextStyle(
                                                         color:
                                                             TColor.primaryText,
@@ -453,7 +496,7 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                                   ),
                                                   SizedBox(
                                                     width: 130,
-                                                    height: 25,
+                                                    height: 50,
                                                     child: RoundIconButton(
                                                         title: "Add to Cart",
                                                         icon:

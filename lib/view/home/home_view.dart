@@ -151,7 +151,7 @@ class _HomeViewState extends State<HomeView> {
                     Text(
                       "Delivering to",
                       style:
-                          TextStyle(color: TColor.secondaryText, fontSize: 11),
+                      TextStyle(color: TColor.secondaryText, fontSize: 11),
                     ),
                     const SizedBox(
                       height: 6,

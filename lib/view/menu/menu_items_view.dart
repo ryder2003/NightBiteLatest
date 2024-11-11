@@ -59,15 +59,15 @@ class _CategoryProductState extends State<CategoryProduct> {
 
             return MenuItemRow(
               image: ds["Image"],
-              foodType: "",
+              foodType: ds["Detail"],
               name: ds["Name"],
-              rate: ds["Detail"],
+              rate: ds["Price"],
               type: widget.mObj['name'],
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ItemDetailsView(),
+                    builder: (context) => ItemDetailsView(image: ds["Image"], price: ds["Price"], description: ds["Detail"], name: ds["Name"],),
                   ),
                 );
               },
@@ -80,73 +80,6 @@ class _CategoryProductState extends State<CategoryProduct> {
 
 
   TextEditingController txtSearch = TextEditingController();
-
-  List menuItemsArr = [
-    {
-      "image": "assets/img/dess_1.png",
-      "name": "French Apple Pie",
-      "rate": "4.9",
-      "rating": "124",
-      "type": "Minute by tuk tuk",
-      "food_type": "Desserts"
-    },
-    {
-      "image": "assets/img/dess_2.png",
-      "name": "Dark Chocolate Cake",
-      "rate": "4.9",
-      "rating": "124",
-      "type": "Cakes by Raman",
-      "food_type": "Desserts"
-    },
-    {
-      "image": "assets/img/dess_3.png",
-      "name": "Street Shake",
-      "rate": "4.9",
-      "rating": "124",
-      "type": "Café Racer",
-      "food_type": "Desserts"
-    },
-    {
-      "image": "assets/img/dess_4.png",
-      "name": "Fudgy Chewy Brownies",
-      "rate": "4.9",
-      "rating": "124",
-      "type": "Minute by tuk tuk",
-      "food_type": "Desserts"
-    },
-    {
-      "image": "assets/img/dess_1.png",
-      "name": "French Apple Pie",
-      "rate": "4.9",
-      "rating": "124",
-      "type": "Minute by tuk tuk",
-      "food_type": "Desserts"
-    },
-    {
-      "image": "assets/img/dess_2.png",
-      "name": "Dark Chocolate Cake",
-      "rate": "4.9",
-      "rating": "124",
-      "type": "Cakes by Tella",
-      "food_type": "Desserts"
-    },
-    {
-      "image": "assets/img/dess_3.png",
-      "name": "Street Shake",
-      "rate": "4.9",
-      "rating": "124",
-      "type": "Café Racer",
-      "food_type": "Desserts"
-    },
-    {
-      "image": "assets/img/dess_4.png",
-      "name": "Fudgy Chewy Brownies",
-      "rate": "4.9",
-      "rating": "124",
-      "type": "Minute by tuk tuk",
-      "food_type": "Desserts"
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -221,6 +154,11 @@ class _CategoryProductState extends State<CategoryProduct> {
                 height: 15,
               ),
 
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: allProducts(), // Display the menu items here
+              ),
+
             ],
           ),
         ),
@@ -228,3 +166,70 @@ class _CategoryProductState extends State<CategoryProduct> {
     );
   }
 }
+//
+// List menuItemsArr = [
+//   {
+//     "image": "assets/img/dess_1.png",
+//     "name": "French Apple Pie",
+//     "rate": "4.9",
+//     "rating": "124",
+//     "type": "Minute by tuk tuk",
+//     "food_type": "Desserts"
+//   },
+//   {
+//     "image": "assets/img/dess_2.png",
+//     "name": "Dark Chocolate Cake",
+//     "rate": "4.9",
+//     "rating": "124",
+//     "type": "Cakes by Raman",
+//     "food_type": "Desserts"
+//   },
+//   {
+//     "image": "assets/img/dess_3.png",
+//     "name": "Street Shake",
+//     "rate": "4.9",
+//     "rating": "124",
+//     "type": "Café Racer",
+//     "food_type": "Desserts"
+//   },
+//   {
+//     "image": "assets/img/dess_4.png",
+//     "name": "Fudgy Chewy Brownies",
+//     "rate": "4.9",
+//     "rating": "124",
+//     "type": "Minute by tuk tuk",
+//     "food_type": "Desserts"
+//   },
+//   {
+//     "image": "assets/img/dess_1.png",
+//     "name": "French Apple Pie",
+//     "rate": "4.9",
+//     "rating": "124",
+//     "type": "Minute by tuk tuk",
+//     "food_type": "Desserts"
+//   },
+//   {
+//     "image": "assets/img/dess_2.png",
+//     "name": "Dark Chocolate Cake",
+//     "rate": "4.9",
+//     "rating": "124",
+//     "type": "Cakes by Tella",
+//     "food_type": "Desserts"
+//   },
+//   {
+//     "image": "assets/img/dess_3.png",
+//     "name": "Street Shake",
+//     "rate": "4.9",
+//     "rating": "124",
+//     "type": "Café Racer",
+//     "food_type": "Desserts"
+//   },
+//   {
+//     "image": "assets/img/dess_4.png",
+//     "name": "Fudgy Chewy Brownies",
+//     "rate": "4.9",
+//     "rating": "124",
+//     "type": "Minute by tuk tuk",
+//     "food_type": "Desserts"
+//   },
+// ];
