@@ -36,7 +36,7 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitDown,DeviceOrientation.portraitUp]).then((value){
     _initializeFirebase();
-    runApp(const MyApp(defaultHome: Login(),));
+    runApp(const MyApp(defaultHome: MainTabView(),));
   });
 }
 
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
       onGenerateRoute: (routeSettings){
         switch (routeSettings.name) {
           case "welcome":
-              return MaterialPageRoute(builder: (context) => const WelcomeView() );
+              return MaterialPageRoute(builder: (context) => WelcomeView() );
           case "Home":
               return MaterialPageRoute(builder: (context) => const MainTabView() );
           default:

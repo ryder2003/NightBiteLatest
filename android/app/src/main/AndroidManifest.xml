@@ -26,6 +26,9 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
@@ -34,4 +37,13 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+
+    <queries>
+        <!-- types of wallet added -->
+        <package android:name="io.metamask"/>
+        <package android:name="com.wallet.crypto.trustapp"/>
+        <package android:name="io.gnosis.safe"/>
+        <package android:name="me.rainbow"/>
+        <!-- Add other wallet schemes names here -->
+    </queries>
 </manifest>

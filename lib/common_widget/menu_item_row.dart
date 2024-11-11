@@ -135,12 +135,27 @@ class MenuItemRow extends StatelessWidget {
         child: Stack(
           alignment: Alignment.bottomLeft,
           children: [
-            Image.asset(
-              image,
-              width: double.maxFinite,
-              height: 200,
-              fit: BoxFit.cover,
-            ),
+          Image.network(
+          image, // The network URL
+          width: double.maxFinite,
+          height: 200,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return const Center(
+              child: Icon(
+                Icons.broken_image,
+                size: 50,
+                color: Colors.grey,
+              ),
+            ); // Fallback widget in case the image fails to load
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return const Center(
+              child: CircularProgressIndicator(), // Show a loading indicator while the image loads
+            );
+          },
+        ),
             Container(
               width: double.maxFinite,
               height: 200,
