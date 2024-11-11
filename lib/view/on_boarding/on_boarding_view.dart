@@ -17,7 +17,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
     {
       "title": "Find Food You Love",
       "subtitle":
-          "Discover the best foods from over 1,000\nrestaurants and fast delivery to your\ndoorstep",
+      "Discover the best foods from over 1,000\nrestaurants and fast delivery to your\ndoorstep",
       "image": "assets/img/on_boarding_1.png",
     },
     {
@@ -28,7 +28,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
     {
       "title": "Live Tracking",
       "subtitle":
-          "Real time tracking of your food on the app\nonce you placed the order",
+      "Real time tracking of your food on the app\nonce you placed the order",
       "image": "assets/img/on_boarding_3.png",
     },
   ];

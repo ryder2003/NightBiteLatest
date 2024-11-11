@@ -28,6 +28,7 @@ dependencies:
   fluttertoast: ^8.2.1
   solana_wallet_adapter: ^0.1.5
   reown_appkit: ^1.0.1
+  cached_network_image:
 
   logger:
 
@@ -52,6 +53,13 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^4.0.0
+
+  flutter_launcher_icons: "^0.13.1"
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/img/logoblack.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
 
 flutter:
 

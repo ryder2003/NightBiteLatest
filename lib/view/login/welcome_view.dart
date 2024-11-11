@@ -29,27 +29,24 @@ class _WelcomeViewState extends State<WelcomeView> {
                   width: media.width,
                 ),
                 Image.asset(
-                  "assets/img/app_logo.png",
+                  "assets/img/logoblack.png",
                   width: media.width * 0.55,
                   height: media.width * 0.55,
                   fit: BoxFit.contain,
                 ),
               ],
             ),
-            SizedBox(
-              height: media.width * 0.1,
-            ),
+            SizedBox(height: media.width * 0.1),
             Text(
-              "Discover the best foods from over 1,000\nrestaurants and fast delivery to your\ndoorstep",
+              "From cravings to essentials, delivered fast or ready \nfor takeaway – directly from night canteens or cafeteria to your room!",
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: TColor.secondaryText,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500),
+                color: TColor.secondaryText,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            SizedBox(
-              height: media.width * 0.1,
-            ),
+            SizedBox(height: media.width * 0.1),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: RoundButton(
@@ -57,34 +54,26 @@ class _WelcomeViewState extends State<WelcomeView> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const Login(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const Login()),
                   );
                 },
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: RoundButton(
                 title: "Create an Account",
                 type: RoundButtonType.textPrimary,
                 onPressed: () {
-                   Navigator.push(
+                  Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const Signup(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const Signup()),
                   );
                 },
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/view/more/about_us_view.dart';
+import 'package:food_delivery/view/login/login_view.dart';
 import 'package:food_delivery/view/more/inbox_view.dart';
 import 'package:food_delivery/view/more/payment_details_view.dart';
 
@@ -135,7 +135,7 @@ class _MoreViewState extends State<MoreView> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const AboutUsView()));
+                                    builder: (context) => const Login()));
                           case "6":
                             ServiceCall.logout();
 

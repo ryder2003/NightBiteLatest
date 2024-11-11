@@ -9,6 +9,7 @@ import 'package:food_delivery/common/locator.dart';
 import 'package:food_delivery/common/service_call.dart';
 import 'package:food_delivery/view/Admin/add_Products.dart';
 import 'package:food_delivery/view/login/login_view.dart';
+import 'package:food_delivery/view/login/splash_screen.dart';
 import 'package:food_delivery/view/login/welcome_view.dart';
 import 'package:food_delivery/view/main_tabview/main_tabview.dart';
 import 'package:food_delivery/view/on_boarding/on_boarding_view.dart';
@@ -32,11 +33,14 @@ void main() async {
   //   ServiceCall.userPayload = Globs.udValue(Globs.userPayload);
   // }
 
+  //To show splash screen to full screen
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   //For setting orientation to portrait mode only
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitDown,DeviceOrientation.portraitUp]).then((value){
     _initializeFirebase();
-    runApp(const MyApp(defaultHome: MainTabView(),));
+    runApp(const MyApp(defaultHome: SplashScreen(),));
   });
 }
 
@@ -95,7 +99,7 @@ class _MyAppState extends State<MyApp> {
       onGenerateRoute: (routeSettings){
         switch (routeSettings.name) {
           case "welcome":
-              return MaterialPageRoute(builder: (context) => WelcomeView() );
+              return MaterialPageRoute(builder: (context) => const WelcomeView() );
           case "Home":
               return MaterialPageRoute(builder: (context) => const MainTabView() );
           default:
