@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/common/color_extension.dart';
 import 'package:food_delivery/common_widget/round_button.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../common_widget/popular_resutaurant_row.dart';
 import '../more/my_order_view.dart';
@@ -14,6 +16,7 @@ class OfferView extends StatefulWidget {
 
 class _OfferViewState extends State<OfferView> {
   TextEditingController txtSearch = TextEditingController();
+  List<Map<String, dynamic>> orders = [];
 
   List offerArr = [
     {
@@ -66,6 +69,81 @@ class _OfferViewState extends State<OfferView> {
     },
   ];
 
+  Future<void> _fetchOrders() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('orders').get();
+      List<Map<String, dynamic>> fetchedOrders = snapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+        return {
+          "image": data['productImage'] ?? "assets/img/default_image.png",
+          "name": data['productName'] ?? "Unknown",
+          "rate": data['price']?.toString() ?? "0.0",
+          "rating": "N/A", // Placeholder if no rating is provided
+          "type": data['canteen Name'] ?? "Unknown Canteen",
+          "food_type": "Western Food", // or any specific value if it's constant
+        };
+      }).toList();
+
+      setState(() {
+        orders = fetchedOrders;
+      });
+    } catch (e) {
+      print("Error fetching orders: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLocationPermission();
+    _fetchOrders();
+  }
+
+  Future<void> _checkLocationPermission() async {
+    // Check location permission status
+    PermissionStatus permissionStatus = await Permission.location.status;
+
+    if (permissionStatus.isDenied) {
+      // If permission is denied, request permission
+      permissionStatus = await Permission.location.request();
+      if (permissionStatus.isDenied) {
+        _showPermissionDeniedDialog();
+      }
+    } else if (permissionStatus.isPermanentlyDenied) {
+      // If permanently denied, prompt user to open settings
+      _showPermissionDeniedDialog();
+    }
+  }
+
+  void _showPermissionDeniedDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Location Permission Required"),
+        content: Text(
+          "You can only accept orders while your location is enabled. Please allow location access to proceed.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              // Open app settings for location permissions
+              await openAppSettings();
+            },
+            child: Text("Allow"),
+          ),
+        ],
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +162,7 @@ class _OfferViewState extends State<OfferView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Latest Offers",
+                      "Latest Orders",
                       style: TextStyle(
                           color: TColor.primaryText,
                           fontSize: 20,
@@ -106,21 +184,21 @@ class _OfferViewState extends State<OfferView> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Find discounts, Offers special\nmeals and more!",
-                      style: TextStyle(
-                          color: TColor.secondaryText,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 20),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       // Text(
+              //       //   "Find discounts, Offers special\nmeals and more!",
+              //       //   style: TextStyle(
+              //       //       color: TColor.secondaryText,
+              //       //       fontSize: 14,
+              //       //       fontWeight: FontWeight.w500),
+              //       // ),
+              //     ],
+              //   ),
+              // ),
               const SizedBox(
                 height: 15,
               ),
@@ -129,7 +207,7 @@ class _OfferViewState extends State<OfferView> {
                 child: SizedBox(
                   width: 140,
                   height: 30,
-                  child: RoundButton(title: "check Offers", fontSize: 12 , onPressed: () {}),
+                  child: RoundButton(title: "check Orders", fontSize: 12 , onPressed: () {}),
                 ),
               ),
               const SizedBox(
@@ -143,7 +221,7 @@ class _OfferViewState extends State<OfferView> {
                 itemBuilder: ((context, index) {
                   var pObj = offerArr[index] as Map? ?? {};
                   return PopularRestaurantRow(
-                    pObj: pObj,
+                    pObj: orders[index],
                     onTap: () {},
                   );
                 }),

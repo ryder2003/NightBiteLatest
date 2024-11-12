@@ -23,6 +23,7 @@ class _AddProductsState extends State<AddProducts> {
   TextEditingController nameController = new TextEditingController();
   TextEditingController priceController = new TextEditingController();
   TextEditingController detailController = new TextEditingController();
+  TextEditingController canteenController = new TextEditingController();
   bool isLoading = false;
 
   Future getImage() async {
@@ -50,7 +51,8 @@ class _AddProductsState extends State<AddProducts> {
           "Name": nameController.text,
           "Image": downloadUrl,
           "Price": priceController.text,
-          "Detail": detailController.text
+          "Detail": detailController.text,
+          "canteenName": canteenController.text,
         };
 
         await DatabaseMethods().addProducts(addProduct, value!).then((value) {
@@ -165,6 +167,24 @@ class _AddProductsState extends State<AddProducts> {
                 decoration: BoxDecoration(color: Color(0xFFececf8), borderRadius: BorderRadius.circular(14)),
                 child: TextField(
                   controller: nameController,
+                  decoration: InputDecoration( border: InputBorder.none),
+                ),
+              ),
+
+              SizedBox(height: 30,),
+
+              Text("Canteen Name", style: AppWidget.lightTextStyle(),),
+
+
+              SizedBox(height: 20.09,),
+
+
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(color: Color(0xFFececf8), borderRadius: BorderRadius.circular(14)),
+                child: TextField(
+                  controller: canteenController,
                   decoration: InputDecoration( border: InputBorder.none),
                 ),
               ),
