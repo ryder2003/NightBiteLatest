@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:food_delivery/common/color_extension.dart';
 import 'package:food_delivery/common/locator.dart';
 import 'package:food_delivery/common/service_call.dart';
@@ -16,6 +17,7 @@ import 'package:food_delivery/view/on_boarding/on_boarding_view.dart';
 import 'package:food_delivery/view/on_boarding/startup_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'common/constant.dart';
 import 'common/globs.dart';
 import 'common/my_http_overrides.dart';
 import 'firebase_options.dart';
@@ -35,6 +37,8 @@ void main() async {
 
   //To show splash screen to full screen
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+  Stripe.publishableKey = publishablekey;
 
   //For setting orientation to portrait mode only
   SystemChrome.setPreferredOrientations(
