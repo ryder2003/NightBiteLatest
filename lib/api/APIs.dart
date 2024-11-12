@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -49,7 +48,9 @@ class APIs {
         contact: '',
         id: user.uid,
         email: user.email.toString(),
-        pushToken: ''
+        address: '',
+        latitude: 0.0,
+        longitude: 0.0
     );
     return await firestore.collection('users').doc(user.uid).set(canteenUser.toJson());
   }
@@ -58,6 +59,9 @@ class APIs {
   static Future<void> updateUserInfo() async{
     await firestore.collection('users').doc(user.uid).update({
       'name': me.name,
+      'email': me.email,
+      'contact': me.contact,
+      'address': me.address
     });
   }
 

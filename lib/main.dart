@@ -13,12 +13,9 @@ import 'package:food_delivery/view/login/login_view.dart';
 import 'package:food_delivery/view/login/splash_screen.dart';
 import 'package:food_delivery/view/login/welcome_view.dart';
 import 'package:food_delivery/view/main_tabview/main_tabview.dart';
-import 'package:food_delivery/view/on_boarding/on_boarding_view.dart';
-import 'package:food_delivery/view/on_boarding/startup_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'common/constant.dart';
-import 'common/globs.dart';
+
 import 'common/my_http_overrides.dart';
 import 'firebase_options.dart';
 
@@ -76,7 +73,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Food Delivery',
+      title: 'NightBite',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: "Metropolis",

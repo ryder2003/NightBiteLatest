@@ -5,14 +5,18 @@ class CanteenUser {
     required this.contact,
     required this.id,
     required this.email,
-    required this.pushToken,
+    required this.address,
+    required this.latitude,
+    required this.longitude
   });
   late String image;
   late String name;
   late String contact;
   late String id;
   late String email;
-  late String pushToken;
+  late String address;
+  late double latitude;
+  late double longitude;
 
   CanteenUser.fromJson(Map<String, dynamic> json){
     image = json['image'] ?? '';
@@ -20,18 +24,22 @@ class CanteenUser {
     contact = json['contact']?? '';
     id = json['id']?? '';
     email = json['email']?? '';
-    pushToken = json['push_token']?? '';
+    address = json['address']?? '';
+    latitude = json['latitude']?? '';
+    longitude = json['longitude']?? '';
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['image'] = image;
-    _data['name'] = name;
-    _data['created_at'] = contact;
-    _data['id'] = id;
-    _data['email'] = email;
-    _data['push_token'] = pushToken;
-    return _data;
+    final data = <String, dynamic>{};
+    data['image'] = image;
+    data['name'] = name;
+    data['created_at'] = contact;
+    data['id'] = id;
+    data['email'] = email;
+    data['address'] = address;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
+    return data;
   }
 }
 
