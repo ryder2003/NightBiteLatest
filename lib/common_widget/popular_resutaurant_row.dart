@@ -16,7 +16,7 @@ class PopularRestaurantRow extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Image.asset(
+             Image.network(
                 pObj["image"].toString(),
                 width: double.maxFinite,
                 height: 200,

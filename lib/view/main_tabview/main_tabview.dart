@@ -90,7 +90,7 @@ class _MainTabViewState extends State<MainTabView> {
                   },
                   isSelected: selctTab == 0),
               TabButton(
-                  title: "Offer",
+                  title: "Order",
                   icon: "assets/img/tab_offer.png",
                   onTap: () {
                     if (selctTab != 1) {
