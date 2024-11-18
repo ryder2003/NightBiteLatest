@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/common/color_extension.dart';
 import 'package:food_delivery/common_widget/round_button.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../common_widget/popular_resutaurant_row.dart';
@@ -17,6 +18,7 @@ class OfferView extends StatefulWidget {
 class _OfferViewState extends State<OfferView> {
   TextEditingController txtSearch = TextEditingController();
   List<Map<String, dynamic>> orders = [];
+  Position? userPosition;
 
   List offerArr = [
     {
@@ -69,35 +71,35 @@ class _OfferViewState extends State<OfferView> {
     },
   ];
 
-  Future<void> _fetchOrders() async {
-    try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('orders').get();
-      List<Map<String, dynamic>> fetchedOrders = snapshot.docs.map((doc) {
-        var data = doc.data() as Map<String, dynamic>;
-        return {
-          "image": data['productImage'] ?? "assets/img/default_image.png",
-          "name": data['productName'] ?? "Unknown",
-          "rate": data['price']?.toString() ?? "0.0",
-          "rating": "N/A", // Placeholder if no rating is provided
-          "type": data['canteen Name'] ?? "Unknown Canteen",
-          "food_type": "Western Food", // or any specific value if it's constant
-        };
-      }).toList();
+  // Future<void> _fetchOrders() async {
+  //   try {
+  //     QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('orders').get();
+  //     List<Map<String, dynamic>> fetchedOrders = snapshot.docs.map((doc) {
+  //       var data = doc.data() as Map<String, dynamic>;
+  //       return {
+  //         "image": data['productImage'] ?? "assets/img/default_image.png",
+  //         "name": data['productName'] ?? "Unknown",
+  //         "rate": data['price']?.toString() ?? "0.0",
+  //         "rating": "N/A", // Placeholder if no rating is provided
+  //         "type": data['canteen Name'] ?? "Unknown Canteen",
+  //         "food_type": "Western Food", // or any specific value if it's constant
+  //       };
+  //     }).toList();
+  //
+  //     setState(() {
+  //       orders = fetchedOrders;
+  //     });
+  //   } catch (e) {
+  //     print("Error fetching orders: $e");
+  //   }
+  // }
 
-      setState(() {
-        orders = fetchedOrders;
-      });
-    } catch (e) {
-      print("Error fetching orders: $e");
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _checkLocationPermission();
-    _fetchOrders();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _checkLocationPermission();
+  //   _fetchOrders();
+  // }
 
   Future<void> _checkLocationPermission() async {
     // Check location permission status
@@ -113,6 +115,49 @@ class _OfferViewState extends State<OfferView> {
       // If permanently denied, prompt user to open settings
       _showPermissionDeniedDialog();
     }
+  }
+
+  Future<void> _fetchUserLocation() async {
+    try {
+      // Request and get the user's current location
+      userPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      print("User's Location: ${userPosition!.latitude}, ${userPosition!.longitude}");
+    } catch (e) {
+      print("Error fetching user's location: $e");
+    }
+  }
+
+  Future<void> _fetchOrders() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('orders').get();
+      List<Map<String, dynamic>> fetchedOrders = snapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+        return {
+          "image": data['productImage'] ?? "assets/img/default_image.png",
+          "name": data['productName'] ?? "Unknown",
+          "rate": data['price']?.toString() ?? "0.0",
+          "rating": "N/A", // Placeholder if no rating is provided
+          "type": data['canteen Name'] ?? "Unknown Canteen",
+          "food_type": "Western Food", // or any specific value if it's constant
+          "latitude": userPosition?.latitude ?? 0.0, // Add user's latitude
+          "longitude": userPosition?.longitude ?? 0.0, // Add user's longitude
+        };
+      }).toList();
+
+      setState(() {
+        orders = fetchedOrders;
+      });
+    } catch (e) {
+      print("Error fetching orders: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLocationPermission();
+    _fetchUserLocation().then((_) => _fetchOrders());
   }
 
   void _showPermissionDeniedDialog() {
@@ -213,19 +258,36 @@ class _OfferViewState extends State<OfferView> {
               const SizedBox(
                 height: 15,
               ),
+              // ListView.builder(
+              //   physics: const NeverScrollableScrollPhysics(),
+              //   shrinkWrap: true,
+              //   padding: EdgeInsets.zero,
+              //   itemCount: offerArr.length,
+              //   itemBuilder: ((context, index) {
+              //     var pObj = offerArr[index] as Map? ?? {};
+              //     return PopularRestaurantRow(
+              //       pObj: orders[index],
+              //       onTap: () {},
+              //     );
+              //   }),
+              // ),
+
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
-                itemCount: offerArr.length,
+                itemCount: orders.length,
                 itemBuilder: ((context, index) {
-                  var pObj = offerArr[index] as Map? ?? {};
+                  var order = orders[index];
                   return PopularRestaurantRow(
-                    pObj: orders[index],
-                    onTap: () {},
+                    pObj: order,
+                    onTap: () {
+                      print("Restaurant tapped! Lat: ${order['latitude']}, Long: ${order['longitude']}");
+                    },
                   );
                 }),
               ),
+
             ],
           ),
         ),
