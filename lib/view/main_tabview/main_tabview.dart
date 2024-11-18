@@ -6,7 +6,7 @@ import '../../api/APIs.dart';
 import '../home/home_view.dart';
 import '../menu/menu_view.dart';
 import '../more/more_view.dart';
-import '../offer/offer_view.dart';
+import '../order/order_view.dart';
 import '../profile/profile_view.dart';
 
 class MainTabView extends StatefulWidget {

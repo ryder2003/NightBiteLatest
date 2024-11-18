@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:food_delivery/common_widget/round_icon_button.dart';
@@ -646,6 +648,25 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
   displayPaymentSheet()async{
     try{
       await Stripe.instance.presentPaymentSheet().then((value) async{
+
+        // Add order details to Firebase after successful payment
+        final currentUser = FirebaseAuth.instance.currentUser;
+        if (currentUser != null) {
+          final orderData = {
+            'userId': currentUser.uid,
+            'userEmail': currentUser.email,
+            'productName': widget.name,
+            'price': widget.price,
+            'productImage': widget.image,
+            'timestamp': FieldValue.serverTimestamp(),
+            'canteen Name': "BH-1",
+            'latitude': 25.427184,
+            'longitude': 81.771839,
+          };
+
+          await FirebaseFirestore.instance.collection('orders').add(orderData);
+        }
+
 
         // //code for updating order into firebase
         // Map<String, dynamic> orderInfoMap={

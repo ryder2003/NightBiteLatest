@@ -35,13 +35,22 @@ class PopularRestaurantRow extends StatelessWidget {
                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      pObj["name"],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: TColor.primaryText,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700),
+                    Row(
+                      children: [
+                        Text(
+                          pObj["name"],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: TColor.primaryText,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        Text(
+                          pObj["rate"],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: TColor.primary, fontSize: 11),
+                        ),
+                      ],
                     ),
                     const SizedBox(
                       height: 8,
@@ -61,11 +70,6 @@ class PopularRestaurantRow extends StatelessWidget {
                         width: 4,
                       ),
 
-                      Text(
-                        pObj["rate"],
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: TColor.primary, fontSize: 11),
-                      ),
                       const SizedBox(
                         width: 8,
                       ),
