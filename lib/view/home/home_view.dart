@@ -216,26 +216,26 @@ class _HomeViewState extends State<HomeView> {
                   }),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ViewAllTitleRow(
-                  title: "Popular Restaurants",
-                  onView: () {},
-                ),
-              ),
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                itemCount: popArr.length,
-                itemBuilder: ((context, index) {
-                  var pObj = popArr[index] as Map? ?? {};
-                  return PopularRestaurantRow(
-                    pObj: pObj,
-                    onTap: () {},
-                  );
-                }),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 20),
+              //   child: ViewAllTitleRow(
+              //     title: "Popular Restaurants",
+              //     onView: () {},
+              //   ),
+              // ),
+              // ListView.builder(
+              //   physics: const NeverScrollableScrollPhysics(),
+              //   shrinkWrap: true,
+              //   padding: EdgeInsets.zero,
+              //   itemCount: popArr.length,
+              //   itemBuilder: ((context, index) {
+              //     var pObj = popArr[index] as Map? ?? {};
+              //     return PopularRestaurantRow(
+              //       pObj: pObj,
+              //       onTap: () {},
+              //     );
+              //   }),
+              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: ViewAllTitleRow(

@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:food_delivery/common_widget/round_icon_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:web3dart/web3dart.dart';
 import '../../common/color_extension.dart';
 import '../../common/constant.dart';
 import '../more/my_order_view.dart';
@@ -30,11 +33,72 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
   String? selectedSize;
   String? ingredients;
 
+  late Web3Client _web3Client;
+  late DeployedContract _contract;
+  late ContractFunction _deposit;
+  late ContractFunction _withdraw;
+  late EthPrivateKey _credentials;
+
   @override
   void initState() {
     super.initState();
     price = int.parse(widget.price);
+    _initializeWeb3();
   }
+
+  Future<void> _initializeWeb3() async {
+    const rpcUrl = "http://127.0.0.1:8545"; // Hardhat's default RPC URL
+    const privateKey = "0xYOUR_PRIVATE_KEY"; // Replace with one from Hardhat's accounts
+
+    _web3Client = Web3Client(rpcUrl, http.Client());
+    _credentials = EthPrivateKey.fromHex(privateKey);
+
+    // Load ABI
+    String abi = await rootBundle.loadString('artifacts/contracts/Lock.sol/DeliveryPaymentERC20.json');
+    var jsonAbi = jsonDecode(abi);
+    var abiCode = ContractAbi.fromJson(jsonEncode(jsonAbi['abi']), "ExpenseManagerContract");
+
+    // Set contract address
+    EthereumAddress contractAddress = EthereumAddress.fromHex("0xYOUR_CONTRACT_ADDRESS");
+
+    // Initialize deployed contract
+    _contract = DeployedContract(abiCode, contractAddress);
+
+    // Get contract functions
+    _deposit = _contract.function("deposit");
+    _withdraw = _contract.function("withdraw");
+    //_getBalance = _contract.function("getBalance");
+  }
+
+  Future<void> _makeBlockchainPayment() async {
+    try {
+      // Call deposit function
+      final transaction = Transaction.callContract(
+        contract: _contract,
+        function: _deposit,
+        parameters: [BigInt.from(price), widget.name],
+        value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0.01), // Adjust Ether amount if needed
+      );
+
+      // Send transaction
+      final result = await _web3Client.sendTransaction(
+        _credentials,
+        transaction,
+        chainId: 31337, // Hardhat's default chain ID
+      );
+
+      print("Transaction successful: $result");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Payment successful! TX: $result")),
+      );
+    } catch (e) {
+      print("Error during transaction: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Payment failed: $e")),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -510,7 +574,9 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                                             "assets/img/shopping_add.png",
                                                         color: TColor.primary,
                                                         onPressed: () {
-                                                          makePayment("80");
+                                                          //makePayment("80");
+                                                          // Call the modal sheet with payment options
+                                                          showPaymentOptions(context, widget.name,widget.price, widget.image);
                                                         }),
                                                   )
                                                 ],
@@ -628,6 +694,157 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
       ),
     );
   }
+
+  // void showPaymentOptions(BuildContext context, String name, String price, String image) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //     ),
+  //     builder: (context) {
+  //       return Padding(
+  //         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             Text(
+  //               "Choose Payment Method",
+  //               style: TextStyle(
+  //                 fontSize: 18,
+  //                 fontWeight: FontWeight.bold,
+  //                 color: Theme.of(context).primaryColor,
+  //               ),
+  //             ),
+  //             const SizedBox(height: 20),
+  //             ElevatedButton.icon(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //                 makePayment('80'); // Call the Stripe payment
+  //               },
+  //               icon: const Icon(Icons.payment),
+  //               label: const Text("Pay Now"),
+  //               style: ElevatedButton.styleFrom(
+  //                 minimumSize: const Size(double.infinity, 50),
+  //               ),
+  //             ),
+  //             const SizedBox(height: 10),
+  //             ElevatedButton.icon(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //                 payWithBlockchain(name, price, image); // Placeholder for blockchain payment
+  //               },
+  //               icon: const Icon(Icons.currency_bitcoin),
+  //               label: const Text("Pay with Blockchain"),
+  //               style: ElevatedButton.styleFrom(
+  //                 minimumSize: const Size(double.infinity, 50),
+  //                 backgroundColor: Colors.orange,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+  void showPaymentOptions(BuildContext context, String name, String price, String image) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Title Section
+              Container(
+                width: 50,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              const SizedBox(height: 15),
+              Text(
+                "Choose Payment Method",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange[800],
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Pay Now Button
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  makePayment('80'); // Call the Stripe payment
+                },
+                icon: const Icon(Icons.payment, color: Colors.white),
+                label: const Text("Pay Now"),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Colors.orange[800],
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 4,
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Pay with Blockchain Button
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  payWithBlockchain(name, price, image); // Placeholder for blockchain payment
+                },
+                icon: const Icon(Icons.currency_bitcoin, color: Colors.white),
+                label: const Text("Pay with Blockchain"),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Colors.orange[400],
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 4,
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Cancel Button
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.orange[800],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+  void payWithBlockchain(String name, String price, String image) {
+    // Placeholder logic for blockchain payment
+    print("Blockchain payment initiated for $name at \$$price.");
+  }
+
 
   Future<void> makePayment(String amount) async{
     try {
