@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/common/color_extension.dart';
 
@@ -12,6 +13,25 @@ class OrderDetailsScreen extends StatefulWidget {
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   bool isOrderCompleted = false;
+
+  // Reference to Firestore
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Function to delete the order
+  Future<void> _deleteOrderFromFirebase(String orderId) async {
+    try {
+      await _firestore.collection('orders').doc(orderId).delete();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Order deleted successfully!")),
+      );
+      Navigator.pop(context); // Navigate back to the previous screen
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to delete order: $e")),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +204,17 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async{
+
+                  final orderId = widget.order['id'];
+                  if (orderId != null) {
+                    await _deleteOrderFromFirebase(orderId);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Invalid Order ID!")),
+                    );
+                  }
+
                   setState(() {
                     isOrderCompleted = true;
                   });

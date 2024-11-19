@@ -37,7 +37,7 @@ dependencies:
   cached_network_image:
   permission_handler: ^10.2.0
   geolocator: ^9.0.2
-  web3dart: null
+  web3dart: ^2.4.0
 
   logger:
 
