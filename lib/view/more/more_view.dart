@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/view/login/login_view.dart';
 import 'package:food_delivery/view/more/inbox_view.dart';
 import 'package:food_delivery/view/more/payment_details_view.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../api/APIs.dart';
 import '../../common/color_extension.dart';
 import '../../common/service_call.dart';
+import '../../helper/dialogs.dart';
 import 'my_order_view.dart';
 import 'notification_view.dart';
 
@@ -104,7 +107,7 @@ class _MoreViewState extends State<MoreView> {
                     var mObj = moreArr[index] as Map? ?? {};
                     var countBase = mObj["base"] as int? ?? 0;
                     return InkWell(
-                      onTap: () {
+                      onTap: () async {
                         switch (mObj["index"].toString()) {
                           case "1":
                             Navigator.push(
@@ -132,10 +135,19 @@ class _MoreViewState extends State<MoreView> {
                                 MaterialPageRoute(
                                     builder: (context) => const InboxView()));
                           case "5":
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Login()));
+                            Dialogs.showProgressLoader(context);
+                            //sign out from the app
+                            await APIs.auth.signOut().then((value) async{
+                              await GoogleSignIn().signOut().then((value){
+                                //For hiding progress bar
+                                Navigator.pop(context);
+
+                                //For moving to home screen so nothing remains in back stack after push replacement
+                                Navigator.pop(context);
+
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const Login()));
+                              });
+                            });
                           case "6":
                             ServiceCall.logout();
 

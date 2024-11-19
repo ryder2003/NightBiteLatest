@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/common/color_extension.dart';
 import 'package:food_delivery/common_widget/round_button.dart';
+import 'package:food_delivery/view/order/order_details.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -282,6 +283,7 @@ class _OfferViewState extends State<OfferView> {
                   return PopularRestaurantRow(
                     pObj: order,
                     onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=> OrderDetailsScreen(order: order)));
                       print("Restaurant tapped! Lat: ${order['latitude']}, Long: ${order['longitude']}");
                     },
                   );

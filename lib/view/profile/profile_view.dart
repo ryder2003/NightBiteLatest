@@ -223,6 +223,7 @@ class _ProfileViewState extends State<ProfileView> {
                     fixedSize: Size(mq.size.width * .3, mq.size.height * .15),
                   ),
                   onPressed: () async {
+
                     final XFile? image = await picker.pickImage(source: ImageSource.camera);
                     if (image != null) {
                       _handleImageUpload(File(image.path));
