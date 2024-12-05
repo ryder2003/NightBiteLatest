@@ -86,6 +86,5 @@ The Night Canteen Automation System is an innovative solution for managing cante
 - [Raman Bir Singh]()
 - [Om Swaroop Nayak]()
 - [Pritam Choudhary]()
-- [Other Contributors]
 
 ---
