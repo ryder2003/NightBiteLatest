@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' show FieldValue, FirebaseFirestore;
@@ -36,9 +37,22 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
 
   late Web3Client _web3Client;
   late DeployedContract _contract;
-  late ContractFunction _deposit;
-  late ContractFunction _withdraw;
+  late ContractFunction _completeOrder;
+  late ContractFunction _createOrder;
   late EthPrivateKey _credentials;
+
+  // Function to generate a random 10-digit order ID
+  String generateOrderId() {
+    final random = Random();
+    String orderId = '';
+    for (int i = 0; i < 10; i++) {
+      orderId += random.nextInt(10).toString();
+    }
+    return orderId;
+  }
+
+// // Construct with an API key and custom node options:
+//   Magic.instance = Magic.custom("pk_live_B8C52ABE4CA570CD", rpcUrl: "http://127.0.0.1:8545", chainId: 1);
 
   @override
   void initState() {
@@ -47,58 +61,110 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
     _initializeWeb3();
   }
 
+  // Future<void> _initializeWeb3() async {
+  //   const rpcUrl = "http://127.0.0.1:8545"; // Hardhat's default RPC URL
+  //   const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+  //   _web3Client = Web3Client(rpcUrl, http.Client());
+  //   _credentials = EthPrivateKey.fromHex(privateKey);
+  //
+  //   // Load ABI
+  //   String abi = await rootBundle.loadString('artifacts/contracts/Lock.sol/DeliveryPaymentERC20.json');
+  //   var jsonAbi = jsonDecode(abi);
+  //   var abiCode = ContractAbi.fromJson(jsonEncode(jsonAbi['abi']), "DeliveryPaymentERC20");
+  //
+  //   // Set contract address
+  //   EthereumAddress contractAddress = EthereumAddress.fromHex("0x5fbdb2315678afecb367f032d93f642f64180aa3");
+  //
+  //   // Initialize deployed contract
+  //   _contract = DeployedContract(abiCode, contractAddress);
+  //
+  //   // Get contract functions
+  //   _deposit = _contract.function("deposit");
+  //   _withdraw = _contract.function("withdraw");
+  //   //_getBalance = _contract.function("getBalance");
+  // }
+
   Future<void> _initializeWeb3() async {
     const rpcUrl = "http://127.0.0.1:8545"; // Hardhat's default RPC URL
-    const privateKey = "0xYOUR_PRIVATE_KEY"; // Replace with one from Hardhat's accounts
+    const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
     _web3Client = Web3Client(rpcUrl, http.Client());
     _credentials = EthPrivateKey.fromHex(privateKey);
 
     // Load ABI
-    String abi = await rootBundle.loadString('artifacts/contracts/Lock.sol/DeliveryPaymentERC20.json');
+    String abi = await rootBundle.loadString('artifacts/contracts/Lock.sol/Lock.json');
     var jsonAbi = jsonDecode(abi);
-    var abiCode = ContractAbi.fromJson(jsonEncode(jsonAbi['abi']), "ExpenseManagerContract");
+    var abiCode = ContractAbi.fromJson(jsonEncode(jsonAbi['abi']), "Lock");
 
     // Set contract address
-    EthereumAddress contractAddress = EthereumAddress.fromHex("0xYOUR_CONTRACT_ADDRESS");
+    EthereumAddress contractAddress = EthereumAddress.fromHex("0x5fbdb2315678afecb367f032d93f642f64180aa3");
 
     // Initialize deployed contract
     _contract = DeployedContract(abiCode, contractAddress);
 
     // Get contract functions
-    _deposit = _contract.function("deposit");
-    _withdraw = _contract.function("withdraw");
-    //_getBalance = _contract.function("getBalance");
+    _createOrder = _contract.function("createOrder");
+    _completeOrder = _contract.function("completeOrder");
   }
 
-  Future<void> _makeBlockchainPayment() async {
-    try {
-      // Call deposit function
-      final transaction = Transaction.callContract(
-        contract: _contract,
-        function: _deposit,
-        parameters: [BigInt.from(price), widget.name],
-        value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0.01), // Adjust Ether amount if needed
-      );
+  // Future<void> _makeBlockchainPayment() async {
+  //   try {
+  //     final transaction = Transaction.callContract(
+  //       contract: _contract,
+  //       function: _createOrder,
+  //       parameters: [
+  //         EthereumAddress.fromHex("0xDeliveryAgentAddress"), // Replace with actual delivery agent address
+  //         BigInt.from(price),
+  //       ],
+  //     );
+  //
+  //     // Send transaction
+  //     final result = await _web3Client.sendTransaction(
+  //       _credentials,
+  //       transaction,
+  //       chainId: 31337, // Hardhat's default chain ID
+  //     );
+  //
+  //     print("Transaction successful: $result");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Order created successfully! TX: $result")),
+  //     );
+  //   } catch (e) {
+  //     print("Error during transaction: $e");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Transaction failed: $e")),
+  //     );
+  //   }
+  // }
 
-      // Send transaction
-      final result = await _web3Client.sendTransaction(
-        _credentials,
-        transaction,
-        chainId: 31337, // Hardhat's default chain ID
-      );
-
-      print("Transaction successful: $result");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Payment successful! TX: $result")),
-      );
-    } catch (e) {
-      print("Error during transaction: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Payment failed: $e")),
-      );
-    }
-  }
+  // Future<void> _makeBlockchainPayment() async {
+  //   try {
+  //     // Call deposit function
+  //     final transaction = Transaction.callContract(
+  //       contract: _contract,
+  //       function: _deposit,
+  //       parameters: [BigInt.from(price), widget.name],
+  //       value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0.01), // Adjust Ether amount if needed
+  //     );
+  //
+  //     // Send transaction
+  //     final result = await _web3Client.sendTransaction(
+  //       _credentials,
+  //       transaction,
+  //       chainId: 31337, // Hardhat's default chain ID
+  //     );
+  //
+  //     print("Transaction successful: $result");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Payment successful! TX: $result")),
+  //     );
+  //   } catch (e) {
+  //     print("Error during transaction: $e");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Payment failed: $e")),
+  //     );
+  //   }
+  // }
 
 
   @override
@@ -696,58 +762,6 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
     );
   }
 
-  // void showPaymentOptions(BuildContext context, String name, String price, String image) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-  //     ),
-  //     builder: (context) {
-  //       return Padding(
-  //         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-  //         child: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             Text(
-  //               "Choose Payment Method",
-  //               style: TextStyle(
-  //                 fontSize: 18,
-  //                 fontWeight: FontWeight.bold,
-  //                 color: Theme.of(context).primaryColor,
-  //               ),
-  //             ),
-  //             const SizedBox(height: 20),
-  //             ElevatedButton.icon(
-  //               onPressed: () {
-  //                 Navigator.pop(context);
-  //                 makePayment('80'); // Call the Stripe payment
-  //               },
-  //               icon: const Icon(Icons.payment),
-  //               label: const Text("Pay Now"),
-  //               style: ElevatedButton.styleFrom(
-  //                 minimumSize: const Size(double.infinity, 50),
-  //               ),
-  //             ),
-  //             const SizedBox(height: 10),
-  //             ElevatedButton.icon(
-  //               onPressed: () {
-  //                 Navigator.pop(context);
-  //                 payWithBlockchain(name, price, image); // Placeholder for blockchain payment
-  //               },
-  //               icon: const Icon(Icons.currency_bitcoin),
-  //               label: const Text("Pay with Blockchain"),
-  //               style: ElevatedButton.styleFrom(
-  //                 minimumSize: const Size(double.infinity, 50),
-  //                 backgroundColor: Colors.orange,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   void showPaymentOptions(BuildContext context, String name, String price, String image) {
     showModalBottomSheet(
       context: context,
@@ -786,6 +800,8 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                 onPressed: () {
                   Navigator.pop(context);
                   makePayment('80'); // Call the Stripe payment
+
+                  payWithBlockchain(widget.name, widget.price, widget.image);
                 },
                 icon: const Icon(Icons.payment, color: Colors.white),
                 label: const Text("Pay Now"),
@@ -802,23 +818,23 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
               const SizedBox(height: 10),
 
               // Pay with Blockchain Button
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pop(context);
-                  payWithBlockchain(name, price, image); // Placeholder for blockchain payment
-                },
-                icon: const Icon(Icons.currency_bitcoin, color: Colors.white),
-                label: const Text("Pay with Blockchain"),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                  backgroundColor: Colors.orange[400],
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 4,
-                ),
-              ),
+              // ElevatedButton.icon(
+              //   onPressed: () {
+              //     Navigator.pop(context);
+              //     payWithBlockchain(name, price, image); // Placeholder for blockchain payment
+              //   },
+              //   icon: const Icon(Icons.currency_bitcoin, color: Colors.white),
+              //   label: const Text("Pay with Blockchain"),
+              //   style: ElevatedButton.styleFrom(
+              //     minimumSize: const Size(double.infinity, 50),
+              //     backgroundColor: Colors.orange[400],
+              //     foregroundColor: Colors.white,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(12),
+              //     ),
+              //     elevation: 4,
+              //   ),
+              // ),
               const SizedBox(height: 10),
 
               // Cancel Button
@@ -841,10 +857,39 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
   }
 
 
-  void payWithBlockchain(String name, String price, String image) {
-    // Placeholder logic for blockchain payment
-    print("Blockchain payment initiated for $name at \$$price.");
+  Future<void> payWithBlockchain(String name, String price, String image) async {
+    try {
+      final deliveryAgentAddress = "0x90F79bf6EB2c4f870365E785982E1f101E93b906"; // Replace with the actual delivery agent address
+      final parsedPrice = BigInt.from(int.parse(price));
+
+      // Call the createOrder function
+      final transaction = Transaction.callContract(
+        contract: _contract,
+        function: _createOrder,
+        parameters: [
+          EthereumAddress.fromHex(deliveryAgentAddress),
+          parsedPrice,
+        ],
+      );
+
+      final result = await _web3Client.sendTransaction(
+        _credentials,
+        transaction,
+        chainId: 31337,
+      );
+
+      print("Order created successfully: $result");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Blockchain order created! TX: $result")),
+      );
+    } catch (e) {
+      print("Error during blockchain transaction: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Blockchain transaction failed: $e")),
+      );
+    }
   }
+
 
 
   Future<void> makePayment(String amount) async{
@@ -869,21 +914,43 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
 
         // Add order details to Firebase after successful payment
         final currentUser = FirebaseAuth.instance.currentUser;
-        if (currentUser != null) {
-          final orderData = {
-            'userId': currentUser.uid,
-            'userEmail': currentUser.email,
-            'productName': widget.name,
-            'price': widget.price,
-            'productImage': widget.image,
-            'timestamp': FieldValue.serverTimestamp(),
-            'canteen Name': "BH-1",
-            'latitude': 25.427184,
-            'longitude': 81.771839,
-          };
+        // if (currentUser != null) {
+        //   final orderData = {
+        //     'userId': currentUser.uid,
+        //     'userEmail': currentUser.email,
+        //     'productName': widget.name,
+        //     'price': widget.price,
+        //     'productImage': widget.image,
+        //     'timestamp': FieldValue.serverTimestamp(),
+        //     'canteen Name': "BH-1",
+        //     'latitude': 25.427184,
+        //     'longitude': 81.771839,
+        //   };
+        //
+        //   await FirebaseFirestore.instance.collection('orders').add(orderData);
+        // }
 
-          await FirebaseFirestore.instance.collection('orders').add(orderData);
-        }
+        // Generate a random 10-digit order ID
+        String orderId = generateOrderId();
+
+        final orderData = {
+          'orderId': orderId, // Include the order ID
+          'userId': currentUser?.uid,
+          'userEmail': currentUser?.email,
+          'productName': widget.name,
+          'price': widget.price,
+          'productImage': widget.image,
+          'timestamp': FieldValue.serverTimestamp(),
+          'canteenName': "BH-1",
+          'latitude': 25.427184,
+          'longitude': 81.771839,
+        };
+
+        // Store the order in Firestore with the orderId as the document ID
+        await FirebaseFirestore.instance
+            .collection('orders')
+            .doc(orderId);
+
 
 
         // //code for updating order into firebase
