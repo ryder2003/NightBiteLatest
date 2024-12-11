@@ -68,15 +68,11 @@ The Night Canteen Automation System is an innovative solution for managing cante
 3. **Bounty Points**:  
    Every completed transaction rewards the user with bounty points stored securely on the blockchain.
 
-4. **Order Tracking**:  
-   Users can track the status of their orders in real-time.
-
 ---
 
 ### **Future Enhancements**
 - Integration of **AI recommendations** for personalized order suggestions.
 - Expansion to support **multi-canteen locations**.
-- Adding a **payment gateway** for seamless online payments.
 - Implementing a **leaderboard** to gamify bounty point usage.
 
 ---
@@ -86,6 +82,5 @@ The Night Canteen Automation System is an innovative solution for managing cante
 - [Raman Bir Singh]()
 - [Om Swaroop Nayak]()
 - [Pritam Choudhary]()
-- [Other Contributors]
 
 ---
